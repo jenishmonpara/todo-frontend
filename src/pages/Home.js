@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
 import axios from 'axios'
 import WorkoutDetails from "../components/WorkoutDetails";
+import WorkoutForm from "../components/WorkoutForm";
 const Home = () => {
 
-    const [workouts,setWorkouts] = useState(null)
+    const [workouts,setWorkouts] = useState(null);
+
+    const fetchWorkouts = async () => {
+        const response = await axios('http://localhost:4000/api/workouts/');
+        const json = response.data;
+        
+        setWorkouts(json);
+        console.log('Logging workouts')
+        console.log(workouts);
+    }
 
     useEffect(() => {
-        const fetchWorkouts = async () => {
-            const response = await axios('http://localhost:4000/api/workouts/');
-            console.log('DEBUG');            
-            console.log(response);
-            const json = response.data;
-            
-            setWorkouts(json);
-            console.log('Loggin workouts')
-            console.log(workouts);
-        }
 
         fetchWorkouts();
     }, []);
@@ -32,6 +32,8 @@ const Home = () => {
                     )
                 }
             </div>
+
+            <WorkoutForm onSubmitAdder={fetchWorkouts}/>
 
         </div>
     );
