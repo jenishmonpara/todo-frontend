@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {formatDistanceToNow} from 'date-fns'
 
 const WorkoutDetails = ({workout, fetchWorkouts}) => {
     
@@ -23,6 +24,7 @@ const WorkoutDetails = ({workout, fetchWorkouts}) => {
                 <h4>{workout.title}</h4>
                 <p>Load (in Kgs) : <strong>{workout.load}</strong></p>
                 <p>Reps : <strong>{workout.reps}</strong></p>
+                <p>{formatDistanceToNow(new Date(workout.createdAt), {addSuffix : true})}</p>
                 <span
                 onClick={handleDeleteClick}
                 className='material-symbols-outlined'
