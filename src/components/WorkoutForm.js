@@ -1,5 +1,6 @@
 import {useState} from "react";
 import axios from 'axios';
+// import { useWorkoutContext } from "../../hooks/useWorkoutContext";
 
 const WorkoutForm = ({onSubmitAdder}) => {
 
@@ -7,6 +8,8 @@ const WorkoutForm = ({onSubmitAdder}) => {
     const [load,setLoad] = useState('');
     const [reps,setReps] = useState('');
     const [error,setError] = useState(null);
+    const [emptyFields,setEmptyFields] = useState([]);
+    // const {dispatch} = useWorkoutContext();
 
     const handleSubmit = async (e) => {
         e.preventDefault();  // to prevent refresh of page [ the default action ] on submit 
@@ -20,12 +23,20 @@ const WorkoutForm = ({onSubmitAdder}) => {
             setLoad('');
             setReps('');
             setError(null);
+            setEmptyFields([]);
             onSubmitAdder();
+            // dispatch({type : 'CREATE_WORKOUT', payload : workout});
             
         }catch (e){
-            console.log('AXIOS Runtime error');
+            console.log('AXIOS Runtime error during form submit');
             console.log(e);
             setError(e.response.data.error);
+            if(e.response.data.emptyFields){
+                await setEmptyFields(e.response.data.emptyFields);
+                console.log('Empty Fields set to : ');
+                console.log(emptyFields);
+            }
+            
         }
         
         
@@ -41,6 +52,7 @@ const WorkoutForm = ({onSubmitAdder}) => {
                     type="text"
                     onChange = {(e) => setTitle(e.target.value)}
                     value={title}
+                    className={emptyFields && emptyFields.includes("title") ? 'error' : ''}
                 />
             </div>
             
@@ -50,6 +62,7 @@ const WorkoutForm = ({onSubmitAdder}) => {
                     type="number"
                     onChange = {(e) => setLoad(e.target.value)}
                     value={load}
+                    className={emptyFields && emptyFields.includes("load") ? 'error' : ''}
                 />
             </div>
 
@@ -59,6 +72,7 @@ const WorkoutForm = ({onSubmitAdder}) => {
                     type="number"
                     onChange = {(e) => setReps(e.target.value)}
                     value={reps}
+                    className={emptyFields && emptyFields.includes("reps") ? 'error' : ''}
                 />
             </div>
 
